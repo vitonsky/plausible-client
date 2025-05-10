@@ -15,11 +15,39 @@ Current package is lightweight too, but written and maintained by those who use 
 
 # Usage
 
-TODO: add docs
+Install package with `npm i plausible-client`
 
-# API
+Create instance and play
 
-TODO: add docs
+```ts
+import { Plausible } from 'plausible-client';
+
+const plausible = new Plausible({
+	apiHost: 'https://plausible.io',
+	domain: 'example.org',
+});
+
+plausible.sendEvent('test', {
+	props: {
+		foo: 1,
+		bar: 'string',
+	}
+});
+```
+
+## Automatically track pageviews
+
+```ts
+import { Plausible, enableAutoPageviews } from 'plausible-client';
+
+const plausible = new Plausible({
+	apiHost: 'https://plausible.io',
+	domain: 'example.org',
+});
+
+// Function returns cleanup callback and starts track pageviews
+enableAutoPageviews(plausible);
+```
 
 # Development
 
