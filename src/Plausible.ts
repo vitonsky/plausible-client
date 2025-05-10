@@ -29,13 +29,20 @@ export type PlausibleInitOptions = {
 
 	/**
 	 * Predicate that receive event and decide should event be sent or be skipped
-	 * @param event current event
+	 * @param event current event object
 	 * @returns `boolean`, if `false` - request will be skipped
 	 */
 	readonly filter?: (event: EventProps) => boolean;
+
+	/**
+	 * Event object transformer
+	 * @param event current event object
+	 * @returns new event object
+	 */
+	readonly transform?: (event: EventProps) => EventProps;
 };
 
-type EventProps = {
+export type EventProps = {
 	url: string;
 	referrer: string | null;
 	deviceWidth: number;
@@ -61,10 +68,15 @@ export class Plausible {
 	}
 
 	private sendRequest = async (eventName: string, data: EventProps) => {
-		const { apiHost, domain, filter } = this.config;
+		const { apiHost, domain, filter, transform } = this.config;
 
 		// Skip event
 		if (filter && !filter(data)) return;
+
+		// Transform data
+		if (transform) {
+			data = transform(data);
+		}
 
 		const payload: EventPayload = {
 			n: eventName,
