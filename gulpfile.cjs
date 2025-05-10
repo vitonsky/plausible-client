@@ -1,5 +1,6 @@
 /* eslint-disable spellcheck/spell-checker */
 const gulp = require('gulp');
+const path = require('path');
 const ts = require('gulp-typescript');
 const mergeStream = require('merge-stream');
 const sourcemaps = require('gulp-sourcemaps');
@@ -46,6 +47,7 @@ function copyMetaFiles() {
 	return mergeStream(
 		// Clean package.json
 		gulp.src(['package.json']).pipe(cleanPackageJson()),
+		gulp.src('assets/*').pipe(gulp.dest(path.join(buildDir, 'assets'))),
 		// Copy other
 		gulp.src(['README.md', 'LICENSE']),
 	).pipe(gulp.dest(buildDir));
