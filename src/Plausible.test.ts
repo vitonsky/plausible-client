@@ -47,6 +47,11 @@ test('should call fetch with correct params', async () => {
 					r: null,
 					w: 1024,
 					h: 0,
+					p: JSON.stringify({
+						foo: 1,
+						bar: 'string',
+						baz: null,
+					}),
 				}),
 				keepalive: true,
 			},
