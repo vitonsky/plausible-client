@@ -68,6 +68,39 @@ const plausible = new Plausible({
 enableAutoOutboundTracking(plausible);
 ```
 
+## Filter events
+
+You may filter out specific events.
+
+It may be useful to skip events of users who should not be tracked, ignore irrelevant events by its props, and for development purposes.
+
+Just define predicate `filter` in config, that receive event object and return `true` to send request and `false` to skip.
+
+```ts
+import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+  filter(event) {
+    // Skip all events while development
+    if (location.hostname === 'localhost') {
+      console.warn('Analytics event is skipped, since run on localhost', event);
+      return false;
+    }
+
+    // Skip all events for users who don't want to be tracked
+    if (window.localStorage.plausible_ignore === 'true') return false;
+
+    // Skip events by event props
+    if (event.props.group === 'no-track') return false;
+
+    // Pass all events otherwise
+    return true;
+  }
+});
+```
+
 # Development
 
 `plausible-client` is an truth open source project, so you are welcome on [project github repository](https://github.com/vitonsky/plausible-client/) to contribute a code, [make issues](https://github.com/vitonsky/plausible-client/issues/new/choose) with feature requests and bug reports.
