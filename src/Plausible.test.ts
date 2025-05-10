@@ -24,7 +24,15 @@ test('should call fetch with correct params', async () => {
 		domain: 'example.org',
 	});
 
-	expect(plausible.sendEvent('test')).resolves.toBeUndefined();
+	expect(
+		plausible.sendEvent('test', {
+			props: {
+				foo: 1,
+				bar: 'string',
+				baz: null,
+			},
+		}),
+	).resolves.toBeUndefined();
 
 	expect(mockFetch.mock.calls).toEqual([
 		[

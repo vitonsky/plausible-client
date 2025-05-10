@@ -33,7 +33,7 @@ type EventProps = {
 	referrer: string | null;
 	deviceWidth: number;
 	hashMode?: boolean;
-	props?: Record<string, string>;
+	props?: Record<string, string | number | null | undefined>;
 };
 
 export class Plausible {
