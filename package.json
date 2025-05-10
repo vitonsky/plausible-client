@@ -1,6 +1,6 @@
 {
 	"name": "plausible-client",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"type": "module",
 	"description": "Plausible analytics client with no hassle",
 	"keywords": ["plausible", "analytics"],
