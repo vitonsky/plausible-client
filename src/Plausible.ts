@@ -26,6 +26,13 @@ export type PlausibleInitOptions = {
 	 * Defaults to `'https://plausible.io'`
 	 */
 	readonly apiHost: string;
+
+	/**
+	 * Predicate that receive event and decide should event be sent or be skipped
+	 * @param event current event
+	 * @returns `boolean`, if `false` - request will be skipped
+	 */
+	readonly filter?: (event: EventProps) => boolean;
 };
 
 type EventProps = {
@@ -54,7 +61,10 @@ export class Plausible {
 	}
 
 	private sendRequest = async (eventName: string, data: EventProps) => {
-		const { apiHost, domain } = this.config;
+		const { apiHost, domain, filter } = this.config;
+
+		// Skip event
+		if (filter && !filter(data)) return;
 
 		const payload: EventPayload = {
 			n: eventName,
