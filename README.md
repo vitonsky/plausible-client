@@ -28,10 +28,11 @@ const plausible = new Plausible({
 });
 
 plausible.sendEvent('test', {
-	props: {
-		foo: 1,
-		bar: 'string',
-	}
+  props: {
+    foo: 1,
+    bar: 'string',
+    baz: null,
+  }
 });
 ```
 
@@ -41,8 +42,8 @@ plausible.sendEvent('test', {
 import { Plausible, enableAutoPageviews } from 'plausible-client';
 
 const plausible = new Plausible({
-	apiHost: 'https://plausible.io',
-	domain: 'example.org',
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
 });
 
 // Function returns cleanup callback and starts track pageviews
