@@ -38,6 +38,8 @@ plausible.sendEvent('test', {
 
 ## Automatically track pageviews
 
+To track page views automatically, call `enableAutoPageviews`:
+
 ```ts
 import { Plausible, enableAutoPageviews } from 'plausible-client';
 
@@ -48,6 +50,22 @@ const plausible = new Plausible({
 
 // Function returns cleanup callback and starts track pageviews
 enableAutoPageviews(plausible);
+```
+
+## Automatically track outbound clicks
+
+To track outbound clicks automatically, call `enableAutoOutboundTracking`:
+
+```ts
+import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+});
+
+// Function returns cleanup callback and starts track outbound clicks
+enableAutoOutboundTracking(plausible);
 ```
 
 # Development
