@@ -32,14 +32,14 @@ export type PlausibleInitOptions = {
 	 * @param event current event object
 	 * @returns `boolean`, if `false` - request will be skipped
 	 */
-	readonly filter?: (event: EventProps) => boolean;
+	readonly filter?: (event: EventProps, eventName: string) => boolean;
 
 	/**
 	 * Event object transformer
 	 * @param event current event object
 	 * @returns new event object
 	 */
-	readonly transform?: (event: EventProps) => EventProps;
+	readonly transform?: (event: EventProps, eventName: string) => EventProps;
 };
 
 export type EventProps = {
@@ -71,11 +71,11 @@ export class Plausible {
 		const { apiHost, domain, filter, transform } = this.config;
 
 		// Skip event
-		if (filter && !filter(data)) return;
+		if (filter && !filter(data, eventName)) return;
 
 		// Transform data
 		if (transform) {
-			data = transform(data);
+			data = transform(data, eventName);
 		}
 
 		const payload: EventPayload = {

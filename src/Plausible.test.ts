@@ -82,6 +82,7 @@ test('events filter', async () => {
 				referrer: null,
 				url: 'https://example.org/',
 			},
+			'test',
 		],
 	]);
 	expect(mockFetch.mock.calls).toEqual([]);
@@ -98,6 +99,7 @@ test('events filter', async () => {
 				referrer: null,
 				url: 'https://example.org/',
 			},
+			'test',
 		],
 	]);
 	expect(mockFetch.mock.calls).toEqual([
@@ -132,6 +134,7 @@ test('events filter', async () => {
 				referrer: null,
 				url: 'https://example.org/',
 			},
+			'test',
 		],
 	]);
 	expect(mockFetch.mock.calls).toEqual([]);
@@ -186,6 +189,7 @@ test('events transforming', async () => {
 					bar: 1,
 				},
 			},
+			'test',
 		],
 	]);
 
