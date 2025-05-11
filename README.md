@@ -68,6 +68,75 @@ const plausible = new Plausible({
 enableAutoOutboundTracking(plausible);
 ```
 
+## Filter events
+
+You may filter out specific events.
+
+It may be useful to skip events of users who should not be tracked, ignore irrelevant events by its props, and for development purposes.
+
+Just define predicate `filter` in config:
+- it receive event object as first parameter and event name as second
+- it must return `true` to send request and `false` to skip
+
+```ts
+import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+  filter(event, eventName) {
+    // Skip all events while development
+    if (location.hostname === 'localhost') {
+      console.warn('Analytics event is skipped, since run on localhost', event);
+      return false;
+    }
+
+    // Skip all events for users who don't want to be tracked
+    if (window.localStorage.plausible_ignore === 'true') return false;
+
+    // Skip events by event props
+    if (event.props.group === 'no-track') return false;
+
+    // Skip events by its name, for users who does not participate in preview program
+    if (!event.props.previewEnabled && eventName.startsWith('preview:')) return false;
+
+    // Pass all events otherwise
+    return true;
+  }
+});
+```
+
+## Transform events
+
+You may transform events.
+
+It may be useful to enrich events data or redact some collected data.
+
+Just define option `transform` in config
+- it receive event object and event name
+- it must return new event object.
+
+```ts
+import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+  transform(event, eventName) {
+    event.props = {
+      ...event.props,
+      group: 'clients',
+      userId: event.props.uid ? "uuid:" + event.props.uid : undefined,
+      isPreferDarkTheme: window.matchMedia("(prefers-color-scheme: dark)").matches,
+    };
+
+    return event;
+  }
+});
+```
+
+Transformation hook is runs after filter.
+
 # Development
 
 `plausible-client` is an truth open source project, so you are welcome on [project github repository](https://github.com/vitonsky/plausible-client/) to contribute a code, [make issues](https://github.com/vitonsky/plausible-client/issues/new/choose) with feature requests and bug reports.
