@@ -128,6 +128,8 @@ const plausible = new Plausible({
 });
 ```
 
+Transformation hook is runs after filter.
+
 # Development
 
 `plausible-client` is an truth open source project, so you are welcome on [project github repository](https://github.com/vitonsky/plausible-client/) to contribute a code, [make issues](https://github.com/vitonsky/plausible-client/issues/new/choose) with feature requests and bug reports.
