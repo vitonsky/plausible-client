@@ -101,6 +101,33 @@ const plausible = new Plausible({
 });
 ```
 
+## Transform events
+
+You may transform events.
+
+It may be useful to enrich events data or redact some collected data.
+
+Just define option `transform` in config, that receive event object and return new event object.
+
+```ts
+import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+  transform(event) {
+    event.props = {
+      ...event.props,
+      group: 'clients',
+      userId: event.props.uid ? "uuid:" + event.props.uid : undefined,
+      isPreferDarkTheme: window.matchMedia("(prefers-color-scheme: dark)").matches,
+    };
+
+    return event;
+  }
+});
+```
+
 # Development
 
 `plausible-client` is an truth open source project, so you are welcome on [project github repository](https://github.com/vitonsky/plausible-client/) to contribute a code, [make issues](https://github.com/vitonsky/plausible-client/issues/new/choose) with feature requests and bug reports.
