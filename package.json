@@ -23,7 +23,7 @@
 		"@commitlint/cli": "^17.0.0",
 		"@commitlint/config-conventional": "^17.0.0",
 		"@types/node": "^22.10.2",
-		"@typescript-eslint/eslint-plugin": "^5.25.0",
+		"@typescript-eslint/eslint-plugin": "^8.32.1",
 		"@typescript-eslint/parser": "^5.25.0",
 		"eslint": "^8.40.0",
 		"eslint-plugin-import": "^2.29.1",
