@@ -29,7 +29,7 @@
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-simple-import-sort": "^10.0.0",
 		"eslint-plugin-spellcheck": "^0.0.20",
-		"eslint-plugin-unused-imports": "^2.0.0",
+		"eslint-plugin-unused-imports": "^4.1.4",
 		"gulp": "^5.0.0",
 		"gulp-clean-package": "^0.0.2",
 		"gulp-sourcemaps": "^3.0.0",
