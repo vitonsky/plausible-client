@@ -9,6 +9,7 @@ type EventPayload = {
 	readonly w: Window['innerWidth'];
 	readonly h: 1 | 0;
 	readonly p?: string;
+	readonly rev?: string;
 };
 
 /**
@@ -48,16 +49,20 @@ export type EventProps = {
 	deviceWidth: number;
 	hashMode?: boolean;
 	props?: Record<string, string | number | null | undefined>;
+	revenue?: {
+		currency: string;
+		amount: number | string;
+	};
 };
 
 export class Plausible {
 	constructor(private readonly config: PlausibleInitOptions) {}
 
-	public trackEvent(eventName: string, data?: Pick<EventProps, 'props'>) {
+	public trackEvent(eventName: string, data?: Pick<EventProps, 'props' | 'revenue'>) {
 		return this.sendEvent(eventName, data);
 	}
 
-	public sendEvent(eventName: string, data?: Pick<EventProps, 'props'>) {
+	public sendEvent(eventName: string, data?: Pick<EventProps, 'props' | 'revenue'>) {
 		return this.sendRequest(eventName, {
 			hashMode: false,
 			url: location.href,
@@ -86,6 +91,7 @@ export class Plausible {
 			w: data.deviceWidth,
 			h: data.hashMode ? 1 : 0,
 			p: data && data.props ? JSON.stringify(data.props) : undefined,
+			rev: data && data.revenue ? JSON.stringify(data.revenue) : undefined,
 		};
 
 		const response = await fetch(`${apiHost}/api/event`, {

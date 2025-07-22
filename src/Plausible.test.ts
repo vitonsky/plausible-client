@@ -31,6 +31,10 @@ test('should call fetch with correct params', async () => {
 				bar: 'string',
 				baz: null,
 			},
+			revenue: {
+				currency: 'USD',
+				amount: 1,
+			},
 		}),
 	).resolves.toBeUndefined();
 
@@ -51,6 +55,10 @@ test('should call fetch with correct params', async () => {
 						foo: 1,
 						bar: 'string',
 						baz: null,
+					}),
+					rev: JSON.stringify({
+						currency: 'USD',
+						amount: 1,
 					}),
 				}),
 				keepalive: true,
