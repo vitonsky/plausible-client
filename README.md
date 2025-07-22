@@ -33,7 +33,11 @@ plausible.sendEvent('test', {
     foo: 1,
     bar: 'string',
     baz: null,
-  }
+  },
+  revenue: {
+    currency: 'USD',
+    amount: 5,
+  },
 });
 ```
 
