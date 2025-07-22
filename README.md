@@ -1,4 +1,5 @@
-[![](https://img.shields.io/npm/v/plausible-client.svg)](https://www.npmjs.com/package/plausible-client)
+[![](https://img.shields.io/npm/v/plausible-client.svg)](https://www.npmjs.com/package/plausible-client) ![](https://img.shields.io/bundlejs/size/plausible-client) ![](https://img.shields.io/npm/l/plausible-client) [![](https://img.shields.io/github/contributors/vitonsky/plausible-client
+)](https://github.com/vitonsky/plausible-client/graphs/contributors)
 
 Plausible client to collect analytics in browser with no hassle.
 
@@ -32,7 +33,11 @@ plausible.sendEvent('test', {
     foo: 1,
     bar: 'string',
     baz: null,
-  }
+  },
+  revenue: {
+    currency: 'USD',
+    amount: 5,
+  },
 });
 ```
 

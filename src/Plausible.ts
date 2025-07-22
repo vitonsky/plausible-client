@@ -49,6 +49,13 @@ export type EventProps = {
 	deviceWidth: number;
 	hashMode?: boolean;
 	props?: Record<string, string | number | null | undefined>;
+	/**
+	 * This feature is exclusive to a cloud subscribers.
+	 *
+	 * For community server, you can send events with revenue, but it is not possible to view this data on dashboard.
+	 *
+	 * @link https://github.com/plausible/analytics/issues/4963#issuecomment-2586565742
+	 */
 	revenue?: {
 		currency: string;
 		amount: number | string;
