@@ -56,7 +56,7 @@ test('should call fetch with correct params', async () => {
 						bar: 'string',
 						baz: null,
 					}),
-					rev: JSON.stringify({
+					revenue: JSON.stringify({
 						currency: 'USD',
 						amount: 1,
 					}),
