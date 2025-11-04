@@ -72,9 +72,9 @@ export class Plausible {
 	public sendEvent(eventName: string, data?: Pick<EventProps, 'props' | 'revenue'>) {
 		return this.sendRequest(eventName, {
 			hashMode: false,
-			url: location.href,
-			referrer: document.referrer || null,
-			deviceWidth: window.innerWidth,
+			url: typeof location !== 'undefined' ? location.href : '',
+			referrer: typeof document !== 'undefined' ? document.referrer || null : null,
+			deviceWidth: typeof window !== 'undefined' ? window.innerWidth : 0,
 			...data,
 		});
 	}
