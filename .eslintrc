@@ -42,7 +42,8 @@
 				"skipWords": [
 					"pageview",
 					"pageviews",
-					"uid",
+					"localhost",
+					"uid"
 				],
 				// Check if word contains numbers
 				"skipIfMatch": [
