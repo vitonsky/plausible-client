@@ -84,7 +84,7 @@ Just define predicate `filter` in config:
 - it must return `true` to send request and `false` to skip
 
 ```ts
-import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
+import { Plausible } from 'plausible-client';
 
 const plausible = new Plausible({
   apiHost: 'https://plausible.io',
@@ -111,6 +111,25 @@ const plausible = new Plausible({
 });
 ```
 
+### Default filters
+
+You may use default filters
+
+```ts
+import { Plausible, filters, skipByFlag, skipForHosts } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+  filter: filters(
+    // Ignore events if flag is set as 'true' in provided storage
+    skipByFlag('plausible_ignore', localStorage),
+    // Ignore events sent from listed hostnames
+    skipForHosts(['localhost'])
+  )
+});
+```
+
 ## Transform events
 
 You may transform events.
@@ -122,7 +141,7 @@ Just define option `transform` in config
 - it must return new event object.
 
 ```ts
-import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
+import { Plausible } from 'plausible-client';
 
 const plausible = new Plausible({
   apiHost: 'https://plausible.io',
