@@ -12,6 +12,8 @@ type EventPayload = {
 	readonly revenue?: string;
 };
 
+export type EventTransformer = (event: EventProps, eventName: string) => EventProps;
+
 /**
  * Options used when initializing the tracker.
  */
@@ -40,7 +42,7 @@ export type PlausibleInitOptions = {
 	 * @param event current event object
 	 * @returns new event object
 	 */
-	readonly transform?: (event: EventProps, eventName: string) => EventProps;
+	readonly transform?: EventTransformer;
 };
 
 export type EventProps = {
