@@ -12,6 +12,15 @@ type EventPayload = {
 	readonly revenue?: string;
 };
 
+export type EventTransformer = (event: EventProps, eventName: string) => EventProps;
+
+/**
+ * Predicate to filter events.
+ *
+ * If returns `false`, event will be dropped
+ */
+export type EventFilter = (event: EventProps, eventName: string) => boolean;
+
 /**
  * Options used when initializing the tracker.
  */
@@ -33,14 +42,14 @@ export type PlausibleInitOptions = {
 	 * @param event current event object
 	 * @returns `boolean`, if `false` - request will be skipped
 	 */
-	readonly filter?: (event: EventProps, eventName: string) => boolean;
+	readonly filter?: EventFilter;
 
 	/**
 	 * Event object transformer
 	 * @param event current event object
 	 * @returns new event object
 	 */
-	readonly transform?: (event: EventProps, eventName: string) => EventProps;
+	readonly transform?: EventTransformer;
 };
 
 export type EventProps = {
