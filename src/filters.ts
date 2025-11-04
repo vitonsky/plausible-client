@@ -29,6 +29,6 @@ export const skipByFlag =
  * @returns EventFilter
  */
 export const filters =
-	(filters: EventFilter[]): EventFilter =>
+	(...filters: EventFilter[]): EventFilter =>
 	(event, eventName) =>
 		filters.every((filter) => filter(event, eventName));

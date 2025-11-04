@@ -58,11 +58,21 @@ test('Skip by flag in storage', () => {
 });
 
 test('Compose filters', () => {
-	expect(filters([])(eventProps, 'test')).toBe(true);
+	expect(filters()(eventProps, 'test')).toBe(true);
 
-	expect(filters([() => true, () => true, () => true])(eventProps, 'test')).toBe(true);
+	expect(
+		filters(
+			() => true,
+			() => true,
+			() => true,
+		)(eventProps, 'test'),
+	).toBe(true);
 
-	expect(filters([() => true, () => false, () => true])(eventProps, 'test')).toBe(
-		false,
-	);
+	expect(
+		filters(
+			() => true,
+			() => false,
+			() => true,
+		)(eventProps, 'test'),
+	).toBe(false);
 });
