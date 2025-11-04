@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { EventProps, Plausible } from './Plausible';
 
 const mockFetch = vi.fn();
