@@ -121,6 +121,7 @@ import { Plausible, filters, skipByFlag, skipForHosts } from 'plausible-client';
 const plausible = new Plausible({
   apiHost: 'https://plausible.io',
   domain: 'example.org',
+  // Compose many filters via `filters` call
   filter: filters(
     // Ignore events if flag is set as 'true' in provided storage
     skipByFlag('plausible_ignore', localStorage),
