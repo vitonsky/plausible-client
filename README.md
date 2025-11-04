@@ -140,7 +140,46 @@ const plausible = new Plausible({
 });
 ```
 
-Transformation hook is runs after filter.
+Transformation hook runs after filter.
+
+### Inject user ID
+
+You may automatically inject user id to all events via default transformer:
+
+```ts
+import { Plausible, userId } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+  transform: userId(),
+});
+```
+
+If no config provided to a transformer, user ID will be persist in `localStorage` with key `plausible_uid`.
+
+You may customize how user ID is stored via `storage` option. You may pass any implementation of [`Storage`](https://developer.mozilla.org/docs/Web/API/Storage) like `localStorage` or `sessionStorage`.
+
+Also you may pass `CookieStorage` that implements `Storage` interface.
+
+```ts
+import { Plausible, userId, BrowserUIDStorage, CookieStorage } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+
+  // User ID will be persist in localStorage with key `plausible_uid`
+  transform: userId({ 
+    storage: new BrowserUIDStorage({
+      // Store UID in JS cookies
+      store: CookieStorage(),
+      // Customize storage key to persist ID
+      key: 'uid'
+    }),
+  }),
+});
+```
 
 # Development
 
