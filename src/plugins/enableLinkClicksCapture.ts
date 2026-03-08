@@ -23,6 +23,14 @@ export const enableLinkClicksCapture = (
 	} = config;
 
 	const clickCallback = (event: MouseEvent) => {
+		// See the docs https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
+		const isMainButton = event.button === 0;
+		const isMiddleButton = event.button === 1;
+
+		// Skip any clicks except default click (via tap/left mouse button),
+		// and mouse middle button click.
+		if (!isMainButton && !isMiddleButton) return;
+
 		// Iterate over all targets to find Anchor element and take its text
 		// We do it instead of handle target, since click may appear on nested element
 		const linkElement = event
@@ -45,8 +53,10 @@ export const enableLinkClicksCapture = (
 	};
 
 	document.addEventListener('click', clickCallback, { capture: true });
+	document.addEventListener('auxclick', clickCallback);
 
 	return function cleanup() {
 		document.removeEventListener('click', clickCallback, { capture: true });
+		document.removeEventListener('auxclick', clickCallback);
 	};
 };
