@@ -1,21 +1,45 @@
 import { Plausible } from '../Plausible';
 import { noop } from '../utils/noop';
 
-export const enableAutoOutboundTracking = (plausible: Plausible) => {
+export const enableAutoOutboundTracking = (
+	plausible: Plausible,
+	config: {
+		eventName?: string;
+		captureText?: boolean;
+		filter?: (url: string, text: string) => boolean;
+	} = {},
+) => {
 	if (typeof window === 'undefined') return noop;
+
+	const {
+		eventName = 'Outbound Link: Click',
+		captureText = false,
+		/**
+		 * When filter returns `false`, the event will be dropped
+		 */
+		filter,
+	} = config;
 
 	const clickCallback = (event: MouseEvent) => {
 		// Iterate over all targets to find Anchor element and take its text
 		// We do it instead of handle target, since click may appear on nested element
-		for (const node of event.composedPath()) {
-			if (!(node instanceof HTMLAnchorElement)) continue;
+		const linkElement = event
+			.composedPath()
+			.find((node) => node instanceof HTMLAnchorElement);
+		if (!linkElement) return;
 
-			plausible.sendEvent('Outbound Link: Click', {
-				props: {
-					url: node.href,
-				},
-			});
-		}
+		const url = linkElement.href;
+		const text = linkElement.textContent.trim();
+
+		// Skip event
+		if (filter && !filter(url, text)) return;
+
+		plausible.sendEvent(eventName, {
+			props: {
+				url,
+				text: captureText ? text : undefined,
+			},
+		});
 	};
 
 	document.addEventListener('click', clickCallback, { capture: true });
