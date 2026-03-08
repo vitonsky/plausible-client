@@ -14,7 +14,7 @@ vi.useFakeTimers();
 beforeEach(() => {
 	vi.clearAllMocks();
 	mockFetch.mockReset();
-	mockFetch.mockImplementation(() => new Response('ok'));
+	mockFetch.mockImplementation(() => Promise.resolve(new Response('ok')));
 
 	Object.defineProperty(window, 'location', {
 		value: {
