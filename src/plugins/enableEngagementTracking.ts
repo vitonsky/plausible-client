@@ -46,6 +46,7 @@ export const enableEngagementTracking = (plausible: Plausible) => {
 	return () => {
 		window.removeEventListener('scroll', trackUserAction);
 		visibilityChangeCleanup();
+		trackEngagement.flush();
 		engagementTracker.stop();
 	};
 };
