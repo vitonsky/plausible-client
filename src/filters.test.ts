@@ -15,8 +15,11 @@ const setURL = (url: string) => {
 	});
 };
 
+const spyConsoleWarn = vi.spyOn(console, 'warn');
+
 beforeEach(() => {
 	setURL('https://example.org/');
+	vi.resetAllMocks();
 });
 
 test('Skip hosts', () => {
@@ -32,8 +35,17 @@ test('Skip hosts', () => {
 
 	setURL('http://google.com/');
 	expect(transformer2(eventProps, 'test')).toBe(false);
+	expect(spyConsoleWarn).lastCalledWith(
+		`Analytics event "test" is skipped because of hostname is google.com`,
+		eventProps,
+	);
+
 	setURL('http://example.com/');
 	expect(transformer2(eventProps, 'test')).toBe(false);
+	expect(spyConsoleWarn).lastCalledWith(
+		`Analytics event "test" is skipped because of hostname is example.com`,
+		eventProps,
+	);
 
 	setURL('http://localhost/');
 	expect(transformer2(eventProps, 'test')).toBe(true);
