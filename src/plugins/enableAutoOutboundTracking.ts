@@ -1,5 +1,5 @@
-import { Plausible } from './Plausible';
-import { noop } from './utils/noop';
+import { Plausible } from '../Plausible';
+import { noop } from '../utils/noop';
 
 export const enableAutoOutboundTracking = (plausible: Plausible) => {
 	if (typeof window === 'undefined') return noop;

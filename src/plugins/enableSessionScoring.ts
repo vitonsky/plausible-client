@@ -1,4 +1,5 @@
-import { Plausible } from './Plausible';
+import { Plausible } from '../Plausible';
+import { CookieStorage } from '../transformers/CookieStorage';
 
 export type BotDetectionResult = {
 	isBot: boolean;
@@ -67,13 +68,22 @@ export function getBotSignals(): BotDetectionResult {
 	return { isBot, score, signals };
 }
 
-export const enableSessionScoring = (plausible: Plausible) => {
+export const enableSessionScoring = (
+	plausible: Plausible,
+	config: { storage?: Storage; firstVisitKey?: string } = {},
+) => {
 	if (typeof window === 'undefined') return;
 
-	const firstVisitKey = 'plausible_first_visit';
+	const {
+		storage = (typeof window !== 'undefined'
+			? localStorage || sessionStorage
+			: undefined) || new CookieStorage(),
+		firstVisitKey = 'plausible_first_visit',
+	} = config;
+
 	function getFirstVisit() {
 		try {
-			const firstVisitRaw = localStorage.getItem(firstVisitKey);
+			const firstVisitRaw = storage.getItem(firstVisitKey);
 			if (!firstVisitRaw) return null;
 
 			return new Date(firstVisitRaw);
@@ -86,7 +96,7 @@ export const enableSessionScoring = (plausible: Plausible) => {
 	requestAnimationFrame(() => {
 		const firstVisit = getFirstVisit();
 		if (!firstVisit) {
-			localStorage.setItem(firstVisitKey, new Date().toISOString());
+			storage.setItem(firstVisitKey, new Date().toISOString());
 		}
 
 		plausible.sendEvent('Session scored', {

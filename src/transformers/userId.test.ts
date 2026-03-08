@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { EventProps } from '../Plausible';
-import { BrowserUIDStorage, CookieStorage, userId } from './userId';
+import { CookieStorage } from './CookieStorage';
+import { BrowserUIDStorage, userId } from './userId';
 
 const eventProps = {
 	url: '/',

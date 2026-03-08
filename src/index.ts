@@ -1,5 +1,5 @@
 export * from './Plausible';
-export * from './enableAutoPageviews';
-export * from './enableAutoOutboundTracking';
+
+export * from './plugins';
 export * from './transformers';
 export * from './filters';
