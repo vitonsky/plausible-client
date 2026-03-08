@@ -2,14 +2,14 @@ import { EventFilter } from './Plausible';
 
 export const skipForHosts =
 	(hostnames = ['localhost']): EventFilter =>
-	(event) => {
+	(event, eventName) => {
 		if (typeof window === 'undefined') return true;
 
 		for (const hostname of hostnames) {
 			// Skip all events while development
 			if (location.hostname === hostname) {
 				console.warn(
-					`Analytics event is skipped because of hostname is ${hostname}`,
+					`Analytics event "${eventName}" is skipped because of hostname is ${hostname}`,
 					event,
 				);
 				return false;
