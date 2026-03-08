@@ -4,7 +4,11 @@ import { Plausible } from '../Plausible';
 import { EngagementTimeTracker } from './EngagementTimeTracker';
 
 function getMaxScroll() {
-	return document.body.scrollHeight - window.innerHeight;
+	const scrollHeight = Math.max(
+		document.body.scrollHeight,
+		document.documentElement.scrollHeight,
+	);
+	return Math.max(0, scrollHeight - window.innerHeight);
 }
 
 export const enableEngagementTracking = (plausible: Plausible) => {
@@ -15,10 +19,11 @@ export const enableEngagementTracking = (plausible: Plausible) => {
 
 	const trackEngagement = debounce(
 		() => {
-			const scrollDepth = Math.min(
-				100,
-				Math.round((maxScroll / getMaxScroll()) * 100),
-			);
+			const scrollSize = getMaxScroll();
+			const scrollDepth =
+				scrollSize === 0
+					? 100
+					: Math.min(100, Math.round((maxScroll / scrollSize) * 100));
 
 			plausible.sendEvent('Page engagement', {
 				props: {
