@@ -42,6 +42,7 @@
 				"skipWords": [
 					"pageview",
 					"cpu",
+					"auxclick",
 					"pageviews",
 					"localhost",
 					"uid"
