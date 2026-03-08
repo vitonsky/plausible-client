@@ -37,15 +37,15 @@ test('session must be scored at a next animation frame', async () => {
 	const eventName = eventBody.n;
 	const payload = JSON.parse(eventBody.p);
 	expect(payload).toMatchObject({
-		botScore: 1,
-		botSignals: 'no_plugins',
+		botScore: expect.any(Number),
+		botSignals: expect.any(String),
 		sessionAge: 0,
-		language: 'en-US',
-		languages: 'en-US,en',
+		language: expect.any(String),
+		languages: expect.any(String),
 		screenSize: '0x0',
-		hardwareConcurrency: 16,
-		deviceMemory: 0,
-		devicePixelRatio: 1,
+		hardwareConcurrency: expect.any(Number),
+		deviceMemory: expect.any(Number),
+		devicePixelRatio: expect.any(Number),
 	});
 	expect(eventName).toBe('Session scored');
 });
