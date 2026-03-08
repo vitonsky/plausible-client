@@ -59,7 +59,7 @@ enableAutoPageviews(plausible);
 
 ## Automatically track outbound clicks
 
-To track outbound clicks automatically, call `enableAutoOutboundTracking`:
+To track outbound clicks automatically (same-origin links are skipped automatically), call `enableAutoOutboundTracking`:
 
 ```ts
 import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
@@ -69,8 +69,14 @@ const plausible = new Plausible({
   domain: 'example.org',
 });
 
-// Function returns cleanup callback and starts track outbound clicks
+// Function returns cleanup callback and starts tracking outbound clicks
 enableAutoOutboundTracking(plausible);
+
+// Optionally capture link text or apply a custom filter
+enableAutoOutboundTracking(plausible, {
+  captureText: true,
+  filter: (url, text) => !url.includes('internal'),
+});
 ```
 
 ## Filter events
