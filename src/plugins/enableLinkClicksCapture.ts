@@ -35,7 +35,9 @@ export const enableLinkClicksCapture = (
 		// We do it instead of handle target, since click may appear on nested element
 		const linkElement = event
 			.composedPath()
-			.find((node) => node instanceof HTMLAnchorElement);
+			.find((node) => node instanceof HTMLAnchorElement) as
+			| HTMLAnchorElement
+			| undefined;
 		if (!linkElement) return;
 
 		const url = linkElement.href;
