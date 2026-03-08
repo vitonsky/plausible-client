@@ -1,7 +1,10 @@
 import { EventTransformer } from '../Plausible';
+import { getSessionId } from '../utils/uid';
 
 export class CookieStorage implements Storage {
 	get length(): number {
+		if (typeof document === 'undefined') return 0;
+
 		return document.cookie
 			.split(';')
 			.map((c) => c.trim())
@@ -9,6 +12,8 @@ export class CookieStorage implements Storage {
 	}
 
 	clear(): void {
+		if (typeof document === 'undefined') return;
+
 		const cookies = document.cookie.split(';');
 		for (const cookie of cookies) {
 			const eqPosition = cookie.indexOf('=');
@@ -19,6 +24,8 @@ export class CookieStorage implements Storage {
 	}
 
 	getItem(key: string): string | null {
+		if (typeof document === 'undefined') return null;
+
 		const match = document.cookie.match(
 			new RegExp(
 				'(?:^|; )' +
@@ -30,15 +37,21 @@ export class CookieStorage implements Storage {
 	}
 
 	key(index: number): string | null {
+		if (typeof document === 'undefined') return null;
+
 		const keys = document.cookie.split(';').map((c) => c.trim().split('=')[0]);
 		return keys[index] || null;
 	}
 
 	removeItem(key: string): void {
+		if (typeof document === 'undefined') return;
+
 		document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
 	}
 
 	setItem(key: string, value: string): void {
+		if (typeof document === 'undefined') return;
+
 		document.cookie = `${key}=${encodeURIComponent(value)};path=/`;
 	}
 }
@@ -57,8 +70,15 @@ export class BrowserUIDStorage implements UIDStorage {
 			key?: string;
 		} = {},
 	) {
-		this.store =
-			config.store || localStorage || sessionStorage || new CookieStorage();
+		if (config.store) this.store = config.store;
+		else {
+			const webStorageFallback =
+				typeof window !== 'undefined'
+					? localStorage || sessionStorage
+					: undefined;
+			this.store = webStorageFallback || new CookieStorage();
+		}
+
 		this.key = config.key || 'plausible_uid';
 	}
 
@@ -74,7 +94,7 @@ export class BrowserUIDStorage implements UIDStorage {
 export const userId = ({
 	name = 'uid',
 	storage = new BrowserUIDStorage(),
-	get = () => self.crypto.randomUUID(),
+	get = getSessionId,
 }: {
 	/**
 	 * Property name

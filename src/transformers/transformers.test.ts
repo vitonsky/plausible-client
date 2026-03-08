@@ -9,7 +9,7 @@ const eventProps = {
 } satisfies EventProps;
 
 test('Apply all transformers', () => {
-	const transformer = transformers([
+	const transformer = transformers(
 		(event) => ({ ...event, props: { foo: 100 } }),
 		(event) => {
 			event.props!.foo = 1;
@@ -19,7 +19,7 @@ test('Apply all transformers', () => {
 			event.props!.bar = 2;
 			return event;
 		},
-	]);
+	);
 
 	expect(transformer({ ...eventProps, props: {} }, 'test')).toEqual({
 		...eventProps,
