@@ -150,6 +150,60 @@ const { isBot, score, signals } = getBotSignals();
 // isBot: boolean, score: number, signals: string[]
 ```
 
+## Track page engagement
+
+To automatically track user engagement — scroll depth and active time on the page — call `enableEngagementTracking`:
+
+```ts
+import { Plausible, enableEngagementTracking } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+});
+
+// Function returns a cleanup callback and starts tracking engagement
+enableEngagementTracking(plausible);
+```
+
+The tracker sends a `Page engagement` event to Plausible. Tracking is only active while the browser tab is **visible** and the **window is focused** — time spent on a hidden or unfocused tab is excluded.
+
+Events are debounced (emitted at most once every 3 seconds) and triggered by scroll activity and tab visibility changes.
+
+The `Page engagement` event includes these props:
+
+| Prop | Description |
+|---|---|
+| `scrollDepth` | Furthest scroll position reached on the page, as a percentage (0–100) |
+| `timeOnPage` | Seconds the user has actively spent on the page (tab visible + focused) |
+
+### Use `EngagementTimeTracker` directly
+
+For custom integrations, you can use the lower-level `EngagementTimeTracker` class independently:
+
+```ts
+import { EngagementTimeTracker } from 'plausible-client';
+
+const tracker = new EngagementTimeTracker();
+
+tracker.start();
+
+// Check whether the document is currently active
+console.log(tracker.isActive()); // true / false
+
+// Get total active milliseconds accumulated so far
+console.log(tracker.getTotalTime());
+
+// Subscribe to visibility changes
+const unsubscribe = tracker.onVisibilityChanged((isActive) => {
+  console.log('Active:', isActive);
+});
+
+// Tear down when done
+unsubscribe();
+tracker.stop();
+```
+
 ## Filter events
 
 You may filter out specific events.
