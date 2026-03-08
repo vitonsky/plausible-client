@@ -41,22 +41,6 @@ export function getBotSignals(): BotDetectionResult {
 		signals.push('zero_outer_dimensions');
 	}
 
-	// 6. Permissions API anomaly (common headless trick)
-	try {
-		const permission = (navigator as any).permissions;
-		if (permission) {
-			permission.query({ name: 'notifications' }).then((result: any) => {
-				if (Notification.permission === 'denied' && result.state === 'prompt') {
-					score += 1;
-					signals.push('permission_mismatch');
-				}
-			});
-		}
-	} catch {
-		score += 1;
-		signals.push('permissions_error');
-	}
-
 	// 7. Extremely low hardware signals
 	if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 1) {
 		score += 1;
@@ -112,7 +96,8 @@ export const enableSessionScoring = (
 				// Region
 				timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 				language: navigator.language,
-				languages: navigator.languages.join(','),
+				// Optional check is added for some bot browsers
+				languages: navigator.languages?.join(','),
 
 				// Device
 				screenSize: `${window.screen.width}x${window.screen.height}`,
