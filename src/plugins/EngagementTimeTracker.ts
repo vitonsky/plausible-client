@@ -30,6 +30,8 @@ export class EngagementTimeTracker {
 	} | null = null;
 
 	public start() {
+		if (this.state) return;
+
 		const isActive = isDocumentActive();
 
 		const onVisibilityChange = () => this.updateVisibilityState();
@@ -79,7 +81,9 @@ export class EngagementTimeTracker {
 		this.state.isActive = isActive;
 
 		// Notify subscribers
-		this.callbacks.forEach((onChange) => onChange(isActive));
+		this.callbacks.forEach((onChange) => {
+			onChange(isActive);
+		});
 	}
 
 	protected readonly callbacks = new Set<(isVisible: boolean) => void>();
