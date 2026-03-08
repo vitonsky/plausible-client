@@ -14,7 +14,12 @@ export const enableAutoOutboundTracking = (
 		filter(url, text) {
 			// Skip links with the same origin
 			if (typeof window !== 'undefined') {
-				if (url.startsWith(location.origin)) return false;
+				try {
+					const linkUrl = new URL(url, location.href);
+					if (linkUrl.origin === location.origin) return false;
+				} catch {
+					// Invalid URL, let it through to be filtered by user or tracked
+				}
 			}
 
 			// Apply user filter
