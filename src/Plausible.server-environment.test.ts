@@ -75,7 +75,7 @@ test('plugins must not throw in a server environment', async () => {
 		apiHost: 'https://plausible.io',
 		domain: 'example.org',
 		filter: filters(skipForHosts(['localhost']), skipByFlag('test')),
-		transform: transformers([userId()]),
+		transform: transformers(userId()),
 	});
 
 	enableAutoPageviews(plausible);
