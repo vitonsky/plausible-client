@@ -7,22 +7,16 @@ import { enableAutoOutboundTracking } from './enableAutoOutboundTracking';
 const mockFetch = vi.fn();
 globalThis.fetch = mockFetch;
 
+const locationSpyon = vi.spyOn(window, 'location', 'get');
+
 beforeEach(() => {
 	vi.clearAllMocks();
-
-	Object.defineProperty(window, 'location', {
-		value: {
-			href: 'https://example.org/',
-			assign: vi.fn(),
-			replace: vi.fn(),
-		},
-		writable: true,
-	});
+	locationSpyon.mockReturnValue(new URL('https://example.org') as any as Location);
 
 	mockFetch.mockReturnValue(new Response('ok'));
-});
 
-document.body.innerHTML = `<div><a href="#foo">foo</a> <a href="#bar">bar</a> <a href="#baz"><span>baz</span></a></div>`;
+	document.body.innerHTML = `<div><a id="internal" href="#foo">internal link</a> <a id="external" href="https://google.com/">external link</a> <a id="nested" href="https://example.com"><span>nested text</span></a></div>`;
+});
 
 const plausible = new Plausible({
 	apiHost: 'https://plausible.io',
@@ -31,10 +25,36 @@ const plausible = new Plausible({
 
 enableAutoOutboundTracking(plausible, { captureText: true });
 
+test('Ignore clicks by links with the same origin', async () => {
+	locationSpyon.mockReturnValue(new URL('https://example.org') as any as Location);
+
+	const anchorElm = document.querySelector('a#internal') as HTMLAnchorElement;
+	expect(anchorElm).toBeInstanceOf(HTMLAnchorElement);
+
+	anchorElm.click();
+	expect(mockFetch).not.toHaveBeenCalled();
+
+	anchorElm.href = 'https://example.org/foo';
+	anchorElm.click();
+	expect(mockFetch).not.toHaveBeenCalled();
+
+	anchorElm.href = 'https://example.org/nested/foo';
+	anchorElm.click();
+	expect(mockFetch).not.toHaveBeenCalled();
+
+	anchorElm.href = '/';
+	anchorElm.click();
+	expect(mockFetch).not.toHaveBeenCalled();
+
+	anchorElm.href = 'https://google.com';
+	anchorElm.click();
+	expect(mockFetch).toHaveBeenCalledTimes(1);
+});
+
 test('Capture click for simple link', async () => {
-	const anchorElm1 = document.querySelector('a[href="#foo"]') as HTMLAnchorElement;
-	expect(anchorElm1).toBeInstanceOf(HTMLAnchorElement);
-	anchorElm1.click();
+	const anchorElm = document.querySelector('a#external') as HTMLAnchorElement;
+	expect(anchorElm).toBeInstanceOf(HTMLAnchorElement);
+	anchorElm.click();
 
 	expect(mockFetch).toHaveBeenLastCalledWith('https://plausible.io/api/event', {
 		method: 'POST',
@@ -47,8 +67,8 @@ test('Capture click for simple link', async () => {
 			w: 1024,
 			h: 0,
 			p: JSON.stringify({
-				url: 'https://example.org/#foo',
-				text: 'foo',
+				url: 'https://google.com/',
+				text: 'external link',
 			}),
 		}),
 		keepalive: true,
@@ -56,7 +76,7 @@ test('Capture click for simple link', async () => {
 });
 
 test('Capture click for link text', async () => {
-	const spanElm = document.querySelector('a[href="#baz"] > span') as HTMLSpanElement;
+	const spanElm = document.querySelector('a#nested > span') as HTMLSpanElement;
 	expect(spanElm).toBeInstanceOf(HTMLSpanElement);
 	spanElm.click();
 
@@ -71,8 +91,8 @@ test('Capture click for link text', async () => {
 			w: 1024,
 			h: 0,
 			p: JSON.stringify({
-				url: 'https://example.org/#baz',
-				text: 'baz',
+				url: 'https://example.com/',
+				text: 'nested text',
 			}),
 		}),
 		keepalive: true,
