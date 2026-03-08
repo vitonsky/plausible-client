@@ -33,7 +33,19 @@ test('session must be scored at a next animation frame', async () => {
 
 	vi.advanceTimersToNextFrame();
 
-	expect(mockFetch.mock.calls).not.toEqual([]);
-
-	expect(mockFetch.mock.calls).toMatchSnapshot();
+	const eventBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+	const eventName = eventBody.n;
+	const payload = JSON.parse(eventBody.p);
+	expect(payload).toMatchObject({
+		botScore: 1,
+		botSignals: 'no_plugins',
+		sessionAge: 0,
+		language: 'en-US',
+		languages: 'en-US,en',
+		screenSize: '0x0',
+		hardwareConcurrency: 16,
+		deviceMemory: 0,
+		devicePixelRatio: 1,
+	});
+	expect(eventName).toBe('Session scored');
 });
