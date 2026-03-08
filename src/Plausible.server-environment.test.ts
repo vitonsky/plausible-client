@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { enableAutoOutboundTracking } from './enableAutoOutboundTracking';
 import { enableAutoPageviews } from './enableAutoPageviews';
+import { enableSessionScoring } from './enableSessionScoring';
 import { filters, skipByFlag, skipForHosts } from './filters';
 import { Plausible } from './Plausible';
 import { transformers, userId } from './transformers';
@@ -80,6 +81,7 @@ test('plugins must not throw in a server environment', async () => {
 
 	enableAutoPageviews(plausible);
 	enableAutoOutboundTracking(plausible);
+	enableSessionScoring(plausible);
 
 	await plausible.sendEvent('test', {
 		props: {

@@ -41,6 +41,7 @@
 				"lang": "en_US",
 				"skipWords": [
 					"pageview",
+					"cpu",
 					"pageviews",
 					"localhost",
 					"uid"
