@@ -1,5 +1,5 @@
-import { Plausible } from './Plausible';
-import { noop } from './utils/noop';
+import { Plausible } from '../Plausible';
+import { noop } from '../utils/noop';
 
 // Source: https://github.com/plausible/plausible-tracker/blob/ab75723ad10660cbaee3718d1b0a670e2dfd717d/src/lib/tracker.ts#L253-L284
 export const enableAutoPageviews = (plausible: Plausible) => {

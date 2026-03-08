@@ -59,7 +59,7 @@ enableAutoPageviews(plausible);
 
 ## Automatically track outbound clicks
 
-To track outbound clicks automatically, call `enableAutoOutboundTracking`:
+To track outbound clicks automatically (same-origin links are skipped automatically), call `enableAutoOutboundTracking`:
 
 ```ts
 import { Plausible, enableAutoOutboundTracking } from 'plausible-client';
@@ -69,8 +69,85 @@ const plausible = new Plausible({
   domain: 'example.org',
 });
 
-// Function returns cleanup callback and starts track outbound clicks
+// Function returns cleanup callback and starts tracking outbound clicks
 enableAutoOutboundTracking(plausible);
+
+// Optionally capture link text or apply a custom filter
+enableAutoOutboundTracking(plausible, {
+  captureText: true,
+  filter: (url, text) => !url.includes('internal'),
+});
+```
+
+## Track any link clicks
+
+For fine-grained control over which links to track, use `enableLinkClicksCapture` directly:
+
+```ts
+import { Plausible, enableLinkClicksCapture } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+});
+
+// Function returns cleanup callback
+enableLinkClicksCapture(plausible, {
+  eventName: 'Link click',   // default
+  captureText: true,          // include link text as a prop
+  filter: (url, text) => url.startsWith('https://'),
+});
+```
+
+## Score user sessions
+
+To collect device/region signals and detect trivial bots, call `enableSessionScoring`:
+
+```ts
+import { Plausible, enableSessionScoring } from 'plausible-client';
+
+const plausible = new Plausible({
+  apiHost: 'https://plausible.io',
+  domain: 'example.org',
+});
+
+// Sends a "Session scored" event on the next animation frame
+enableSessionScoring(plausible);
+```
+
+The `Session scored` event includes these props:
+
+| Prop | Description |
+|---|---|
+| `botScore` | Numeric score — ≥ 3 indicates a likely bot |
+| `botSignals` | Comma-separated triggered signals, e.g. `webdriver,headless_ua` |
+| `sessionAge` | Seconds since the first recorded visit |
+| `timeZone` | IANA timezone resolved from `Intl.DateTimeFormat` |
+| `language` | `navigator.language` |
+| `languages` | `navigator.languages` joined with `,` |
+| `screenSize` | `{width}x{height}` from `window.screen` |
+| `hardwareConcurrency` | Number of logical CPU cores |
+| `deviceMemory` | Device RAM in GB (where available) |
+| `devicePixelRatio` | Screen pixel density |
+
+You can customise the storage backend or key used to persist the first-visit timestamp:
+
+```ts
+import { Plausible, enableSessionScoring, CookieStorage } from 'plausible-client';
+
+enableSessionScoring(plausible, {
+  storage: new CookieStorage(),
+  firstVisitKey: 'my_first_visit',
+});
+```
+
+You can also use `getBotSignals()` independently:
+
+```ts
+import { getBotSignals } from 'plausible-client';
+
+const { isBot, score, signals } = getBotSignals();
+// isBot: boolean, score: number, signals: string[]
 ```
 
 ## Filter events
