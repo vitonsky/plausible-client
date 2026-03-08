@@ -31,7 +31,7 @@ export const enableLinkClicksCapture = (
 		if (!linkElement) return;
 
 		const url = linkElement.href;
-		const text = linkElement.textContent.trim();
+		const text = (linkElement.textContent as string | null)?.trim() ?? '';
 
 		// Skip event
 		if (filter && !filter(url, text)) return;
